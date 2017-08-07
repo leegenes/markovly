@@ -1,2 +1,1 @@
-
-rker: python tweet.py
+worker: python tweet.py
