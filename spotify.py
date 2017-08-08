@@ -3,16 +3,22 @@ import spotipy.util as sutil
 from bs4 import BeautifulSoup, SoupStrainer
 
 def spotipy_auth():
-    scope = 'user-top-read'
-    u = os.environ['SPOTIFY_USERNAME']
-    token = sutil.prompt_for_user_token(u, scope)
-
-    if token:
-        s = spotipy.Spotify(token)
-        return s
+    scope = ['user-top-read']
+    c_id = os.environ['SPOTIFY_CLIENT_ID']
+    c_sec = os.environ['SPOTIFY_CLIENT_SECRET']
+    r_uri = os.environ['SPOTIFY_REDIRECT_URI']
+    
+    a = spotify_auth.Auth(c_id, c_sec, r_uri, scope=scope)
+    return a
 
 def get_top_tracks(auth):
-    tracks = auth.current_user_top_tracks(limit=50, time_range='short_term')['items']
+    r = requests.request('GET',
+            'https://api.spotify.com/v1/me/top/tracks',
+            headers={'Authorization': 'Bearer {}'.format(auth.access_token),
+            json={'limit': 50,
+                'time_range': 'short-term'}
+            )
+    tracks = r.json()['items']
     return tracks
 
 def search_for_lyrics(q):
