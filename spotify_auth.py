@@ -41,7 +41,7 @@ class Auth:
         self.update_tokens(token)
 
     def set_refresh_config_var(self, refresh_token):
-        heroku_key = os.eviron['HEROKU_API_KEY']
+        heroku_key = os.environ['HEROKU_API_KEY']
         r = requests.request('PATCH',
             'https://api.heroku.com/apps/peaceful-cliffs-64323/config-vars',
             json={'SPOTIFY_REFRESH_TOKEN': refresh_token},
