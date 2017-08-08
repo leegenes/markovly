@@ -30,15 +30,14 @@ class Auth:
             token = oauth.fetch_token(TOKEN_URL,
                                     authorization_response=auth_response,
                                     client_secret=self.client_secret)
+            self.update_tokens(token['access_token'], refresh=token['refresh_token'])
         else:
-           token = OAuth2Session(self.client_id,
-                        token=self.access_token,
-                        auto_refresh_url=AUTH_URL,
-                        auto_refresh_kwargs={'client_id': self.client_id,
-                                            'client_secret': self.client_secret},
-                        token_updater=self.refresh_token)
-
-        self.update_tokens(token)
+            token = requests.request('POST',
+                    TOKEN_URL,
+                    auth=(self.client_id, self.client_secret),
+                    data={'grant_type': 'refresh_token',
+                        'refresh_token': self.refresh_token})
+            self.update_tokens(token['access_token'])
 
     def set_refresh_config_var(self, refresh_token):
         heroku_key = os.environ['MY_HEROKU_API_KEY']
@@ -50,9 +49,9 @@ class Auth:
                     'Authorization': 'Bearer {}'.format(heroku_key)}
                     )
 
-    def update_tokens(self, token): 
-        refresh_token = token['refresh_token']
-        self.refresh_token = refresh_token
-        self.set_refresh_config_var(refresh_token)
+    def update_tokens(self, access, refresh=None): 
+        if refresh:
+            self.refresh_token = refresh
+            self.set_refresh_config_var(refresh)
 
-        self.access_token = token['access_token']
+        self.access_token = access 
