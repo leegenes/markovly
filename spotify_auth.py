@@ -32,11 +32,12 @@ class Auth:
                                     client_secret=self.client_secret)
             self.update_tokens(token['access_token'], refresh=token['refresh_token'])
         else:
-            token = requests.request('POST',
+            r = requests.request('POST',
                     TOKEN_URL,
                     auth=(self.client_id, self.client_secret),
                     data={'grant_type': 'refresh_token',
                         'refresh_token': self.refresh_token})
+            token = r.json()
             self.update_tokens(token['access_token'])
 
     def set_refresh_config_var(self, refresh_token):
