@@ -1,4 +1,4 @@
-import os, requests, re
+import os, requests, re, spotify_auth
 from bs4 import BeautifulSoup, SoupStrainer
 
 def spotipy_auth():
