@@ -1,5 +1,4 @@
-import spotipy, os, requests, re
-import spotipy.util as sutil
+import os, requests, re
 from bs4 import BeautifulSoup, SoupStrainer
 
 def spotipy_auth():
@@ -14,7 +13,7 @@ def spotipy_auth():
 def get_top_tracks(auth):
     r = requests.request('GET',
             'https://api.spotify.com/v1/me/top/tracks',
-            headers={'Authorization': 'Bearer {}'.format(auth.access_token),
+            headers={'Authorization': 'Bearer {}'.format(auth.access_token)},
             json={'limit': 50,
                 'time_range': 'short-term'}
             )
