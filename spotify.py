@@ -6,7 +6,7 @@ def spotipy_auth():
     c_id = os.environ['SPOTIFY_CLIENT_ID']
     c_sec = os.environ['SPOTIFY_CLIENT_SECRET']
     r_uri = os.environ['SPOTIFY_REDIRECT_URI']
-    
+
     a = spotify_auth.Auth(c_id, c_sec, r_uri, scope=scope)
     return a
 
@@ -31,7 +31,7 @@ def search_for_lyrics(q):
     hits = r.json()['response']['hits']
     num_to_compare = 10 if len(hits) >= 10 else len(hits)
     top_hits = hits[:num_to_compare]
-    return top_hits 
+    return top_hits
 
 def find_genius_match(name, artist, hits):
     for h in hits:
@@ -52,7 +52,7 @@ def scrape_lyrics(url):
 #        annotation.replaceWithChildren()
     soup = re.sub('(<(.*?)>|\[(.*?)\]|\(|\)|</br.+>)', '', soup.get_text())
     soup = soup.replace('\n', ' ').replace('\t', ' ').replace('  ', ' ')
-    return soup 
+    return soup
 
 def gather_lyrics():
     a = spotipy_auth()
@@ -72,4 +72,3 @@ def gather_lyrics():
 
 if __name__ == '__main__':
     gather_lyrics()
-    
